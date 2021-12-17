@@ -176,10 +176,9 @@ function countHit(a, b) {
 }
 
 function makeRandomParty() {
-    var p = new Array(numParty);
-    for (var i = 0; i < numParty; i++)
-        p[i] = Math.floor(Math.random() * numJobs);
-    return p;
+    var all = Math.pow(numJobs, numParty);
+    var number = Math.floor(Math.random() * all);
+    return makeSequentialParty(number);
 }
 
 function makeSequentialParty(number) {
