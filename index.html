@@ -89,8 +89,8 @@ function onDeleteResult() {
 function onAddResult() {
     var ch = parseInt(document.getElementById("chit").value);
     var h = parseInt(document.getElementById("hit").value);
-    if (!(ch >= 0)) return;
-    if (!(h >= 0)) return;
+    if (Number.isNaN(ch)) return;
+    if (Number.isNaN(h)) return;
 
     results.push(new HitResult(nextParty, ch, h));
     var next = searchNextParty(results);
