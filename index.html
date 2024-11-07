@@ -223,10 +223,10 @@ function appendNext(table) {
     var tr = document.createElement("tr");
     appendTag(tr, "td", "-");
     appendTag(tr, "td", partyToString(nextParty));
-    appendTag(tr, "td", "<input id=\"chit\" type=\"text\" size=\"3\"/>");
-    appendTag(tr, "td", "<input id=\"hit\" type=\"text\" size=\"3\"/>");
-    appendTag(tr, "td", "<button onclick=\"onAddResult()\">OK</button>");
-    appendTag(tr, "td", "<button onclick=\"onDeleteResult()\">削除</button>");
+    appendTag(tr, "td", '<input id="chit" type="number" min="0" max="5" size="3"/>');
+    appendTag(tr, "td", '<input id="hit" type="number" min="0" max="5" size="3"/>');
+    appendTag(tr, "td", '<button onclick="onAddResult()">OK</button>');
+    appendTag(tr, "td", '<button onclick="onDeleteResult()">削除</button>');
     table.appendChild(tr);
 }
 
