@@ -9,14 +9,16 @@
             line-height: 1.5;
             min-width: 50px;
         }
+        caption {
+            font-weight: bold;
+        }
     </style>
     <script src="../common/ga.js"></script>
     <script src="ffxijobgamehelper.js"></script>
 </head>
 <body>
     <a href="..">ffxiun0</a>
-    <p>FF11 ジョブ当て屋 予測ツール</p>
-    <h3 id="mode"></h3>
+    <h2>FF11 ジョブ当て屋 予測ツール</h2>
     <button onclick="jh.onSwitchNormalMode()">通常モード</button>
     <button onclick="jh.onSwitchHardMode()">ハードモード</button>
     <button onclick="jh.onReset()">リセット</button>
@@ -24,6 +26,7 @@
         <tr>
             <td>
                 <table border="1" cellspacing="1" cellpadding="1" class="border">
+                    <caption id="mode"></caption>
                     <tr><th>回数</th><th>候補</th><th>CH</th><th>H</th></tr>
                     <tbody id="table"><tr><td colspan="4">Java Script を有効にして下さい</td></tr></tbody>
                 </table>
