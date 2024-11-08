@@ -22,15 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-class FFXIHitResult {
-    constructor(party, ch, h) {
-        this.party = party;
-        this.ch = ch;
-        this.h = h;
-    }
-}
-
 class FFXIJobGameHelper {
+    HitResult = class {
+        constructor(party, ch, h) {
+            this.party = party;
+            this.ch = ch;
+            this.h = h;
+        }
+    }
+
     constructor(idMode, idTable) {
         this.idMode = idMode;
         this.idTable = idTable;
@@ -76,7 +76,7 @@ class FFXIJobGameHelper {
         if (Number.isNaN(ch)) return;
         if (Number.isNaN(h)) return;
 
-        this.results.push(new FFXIHitResult(this.nextParty, ch, h));
+        this.results.push(new this.HitResult(this.nextParty, ch, h));
         const next = this.searchNextParty(this.results);
         if (next) {
             this.nextParty = next;
