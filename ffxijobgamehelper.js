@@ -80,29 +80,11 @@ function HitResult(party, ch, h) {
 }
 
 function searchNextParty(results) {
-    var p1 = searchNextPartyRandom(results);
-    if (p1) return p1;
-
-    var p2 = searchNextPartySequential(results);
-    if (p2) return p2;
-
-    return null;
-}
-
-function searchNextPartyRandom(results) {
     var all = Math.pow(numJobs, numParty);
+    var offset = Math.floor(Math.random() * all);
     for (var i = 0; i < all; i++) {
-        var party = makeRandomParty();
-        if (checkCompatible(party, results))
-            return party;
-    }
-    return null;
-}
-
-function searchNextPartySequential(results) {
-    var all = Math.pow(numJobs, numParty);
-    for (var i = 0; i < all; i++) {
-        var party = makeSequentialParty(i);
+        var number = (offset + i) % all;
+        var party = makePartyFromSerial(number);
         if (checkCompatible(party, results))
             return party;
     }
@@ -148,10 +130,10 @@ function countHit(a, b) {
 function makeRandomParty() {
     var all = Math.pow(numJobs, numParty);
     var number = Math.floor(Math.random() * all);
-    return makeSequentialParty(number);
+    return makePartyFromSerial(number);
 }
 
-function makeSequentialParty(number) {
+function makePartyFromSerial(number) {
     var p = new Array(numParty);
     for (var i = 0; i < numParty; i++) {
         p[i] = number % numJobs;
