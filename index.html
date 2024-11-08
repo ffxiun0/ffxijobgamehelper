@@ -15,6 +15,10 @@
     </style>
     <script src="../common/ga.js"></script>
     <script src="ffxijobgamehelper.js"></script>
+    <script>
+        const jh = new FFXIJobGameHelper("mode", "table");
+        window.onload = (event) => jh.onSwitchNormalMode();
+    </script>
 </head>
 <body>
     <a href="..">ffxiun0</a>
@@ -46,9 +50,5 @@
         <li>FF11で表示されたCH Hを入力し「OK」ボタンを押す</li>
         <li>2～4を繰り返していくと徐々に候補が絞られ、解答に到達します</li>
     </ol>
-    <script>
-        const jh = new FFXIJobGameHelper("mode", "table");
-        jh.onSwitchNormalMode();
-    </script>
 </body>
 </html>
