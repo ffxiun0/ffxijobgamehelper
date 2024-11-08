@@ -4,28 +4,50 @@
     <meta charset="utf-8" />
     <title>FF11 ジョブ当て屋 予測ツール</title>
     <link href="../common/theme.css" rel="stylesheet">
+    <style type="text/css">
+        button {
+            line-height: 1.5;
+            min-width: 50px;
+        }
+    </style>
     <script src="../common/ga.js"></script>
+    <script src="ffxijobgamehelper.js"></script>
 </head>
 <body>
-<a href="..">ffxiun0</a>
-<p>FF11 ジョブ当て屋 予測ツール</p>
-<h3 id="mode"></h3>
-<button onclick="onSwitchNormalMode()">通常モード切替</button>
-<button onclick="onSwitchHardMode()">ハードモード切替</button>
-<button onclick="onReset()">リセット</button>
-<table border="1" cellspacing="1" cellpadding="1" class="border">
-    <tr><th>回数</th><th>候補</th><th>CH</th><th>H</th></tr>
-    <tbody id="table"><tr><td colspan="4">Java Script を有効にして下さい</td></tr></tbody>
-</table>
+    <a href="..">ffxiun0</a>
+    <p>FF11 ジョブ当て屋 予測ツール</p>
+    <h3 id="mode"></h3>
+    <button onclick="jh.onSwitchNormalMode()">通常モード</button>
+    <button onclick="jh.onSwitchHardMode()">ハードモード</button>
+    <button onclick="jh.onReset()">リセット</button>
+    <table>
+        <tr>
+            <td>
+                <table border="1" cellspacing="1" cellpadding="1" class="border">
+                    <tr><th>回数</th><th>候補</th><th>CH</th><th>H</th></tr>
+                    <tbody id="table"><tr><td colspan="4">Java Script を有効にして下さい</td></tr></tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right">
+                <button onclick="jh.onAddResult()">OK</button>
+                <button onclick="jh.onDeleteResult()">削除</button>
+            </td>
+        </tr>
+    </table>
 
-<h3>使い方</h3>
-<ol>
-    <li>「通常モード」か「ハードモード」を選択する</li>
-    <li>「候補」にでているジョブをFF11に設定する</li>
-    <li>FF11で「トライ」を実行する</li>
-    <li>FF11で表示されたCH Hを入力し「OK」ボタンを押す</li>
-    <li>2～4を繰り返していくと徐々に候補が絞られ、解答に到達します</li>
-</ol>
-<script src="ffxijobgamehelper.js"></script>
+    <h3>使い方</h3>
+    <ol>
+        <li>「通常モード」か「ハードモード」を選択する</li>
+        <li>「候補」にでているジョブをFF11に設定する</li>
+        <li>FF11で「トライ」を実行する</li>
+        <li>FF11で表示されたCH Hを入力し「OK」ボタンを押す</li>
+        <li>2～4を繰り返していくと徐々に候補が絞られ、解答に到達します</li>
+    </ol>
+    <script>
+        const jh = new FFXIJobGameHelper("mode", "table");
+        jh.onSwitchNormalMode();
+    </script>
 </body>
 </html>

@@ -22,168 +22,175 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-var numParty = 5;
-var jobs = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
-var numJobs;
-var results;
-var nextParty;
-
-onSwitchNormalMode();
-
-function onSwitchNormalMode() {
-    document.getElementById("mode").innerHTML = "通常モード";
-    numJobs = 6;
-    onReset();
-}
-
-function onSwitchHardMode() {
-    document.getElementById("mode").innerHTML = "ハードモード";
-    numJobs = 9;
-    onReset();
-}
-
-function onReset() {
-    nextParty = makeRandomParty();
-    results = new Array();
-    show();
-}
-
-function onDeleteResult() {
-    if (results.length <= 0) return;
-
-    var r = results.pop();
-    nextParty = r.party;
-    show();
-}
-
-function onAddResult() {
-    var ch = parseInt(document.getElementById("chit").value);
-    var h = parseInt(document.getElementById("hit").value);
-    if (Number.isNaN(ch)) return;
-    if (Number.isNaN(h)) return;
-
-    results.push(new HitResult(nextParty, ch, h));
-    var next = searchNextParty(results);
-    if (next) {
-        nextParty = next;
-        show();
-    } else {
-        results.pop();
-        alert("次候補が見つかりません。入力に間違いがないか確認して下さい。");
+class FFXIHitResult {
+    constructor(party, ch, h) {
+        this.party = party;
+        this.ch = ch;
+        this.h = h;
     }
 }
 
-function HitResult(party, ch, h) {
-    this.party = party;
-    this.ch = ch;
-    this.h = h;
-}
+class FFXIJobGameHelper {
+    constructor(idMode, idTable) {
+        this.idMode = idMode;
+        this.idTable = idTable;
+        this.idCHit = "chit";
+        this.idHit = "hit";
 
-function searchNextParty(results) {
-    var all = Math.pow(numJobs, numParty);
-    var offset = Math.floor(Math.random() * all);
-    for (var i = 0; i < all; i++) {
-        var number = (offset + i) % all;
-        var party = makePartyFromSerial(number);
-        if (checkCompatible(party, results))
-            return party;
+        this.numParty = 5;
+        this.jobs = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
+        this.numJobs = 6;
+        this.results = new Array();
+        this.nextParty = this.makeRandomParty();
     }
-    return null;
-}
 
-function checkCompatible(party, results) {
-    for (var i = 0; i < results.length; i++) {
-        var r = results[i];
-        var ch = countCriticalHit(party, r.party);
-        if (ch != r.ch || ch == numParty) return false;
-
-        var h = countHit(party, r.party) - ch;
-        if (h != r.h) return false;
+    onSwitchNormalMode() {
+        document.getElementById(this.idMode).innerHTML = "通常モード";
+        this.numJobs = 6;
+        this.onReset();
     }
-    return true;
-}
 
-function countCriticalHit(a, b) {
-    var count = 0;
-    for (var i = 0; i < numParty; i++) {
-        if (a[i] == b[i])
-            count++;
+    onSwitchHardMode() {
+        document.getElementById(this.idMode).innerHTML = "ハードモード";
+        this.numJobs = 9;
+        this.onReset();
     }
-    return count;
-}
 
-function countHit(a, b) {
-    var count = 0;
-    var hit = new Array(numParty);
-    for (var i = 0; i < numParty; i++) {
-        for (var j = 0; j < numParty; j++) {
-            if (!hit[j] && a[i] == b[j]) {
-                count++;
-                hit[j] = true;
-                break;
-            }
+    onReset() {
+        this.nextParty = this.makeRandomParty();
+        this.results = new Array();
+        this.show();
+    }
+
+    onDeleteResult() {
+        if (this.results.length <= 0) return;
+
+        const r = this.results.pop();
+        this.nextParty = r.party;
+        this.show();
+    }
+
+    onAddResult() {
+        const ch = parseInt(document.getElementById(this.idCHit).value);
+        const h = parseInt(document.getElementById(this.idHit).value);
+        if (Number.isNaN(ch)) return;
+        if (Number.isNaN(h)) return;
+
+        this.results.push(new FFXIHitResult(this.nextParty, ch, h));
+        const next = this.searchNextParty(this.results);
+        if (next) {
+            this.nextParty = next;
+            this.show();
+        } else {
+            this.results.pop();
+            alert("次候補が見つかりません。入力に間違いがないか確認して下さい。");
         }
     }
-    return count;
-}
 
-function makeRandomParty() {
-    var all = Math.pow(numJobs, numParty);
-    var number = Math.floor(Math.random() * all);
-    return makePartyFromSerial(number);
-}
-
-function makePartyFromSerial(number) {
-    var p = new Array(numParty);
-    for (var i = 0; i < numParty; i++) {
-        p[i] = number % numJobs;
-        number = Math.floor(number / numJobs);
+    searchNextParty(results) {
+        const all = Math.pow(this.numJobs, this.numParty);
+        const offset = Math.floor(Math.random() * all);
+        for (let i = 0; i < all; i++) {
+            const number = (offset + i) % all;
+            const party = this.makePartyFromSerial(number);
+            if (this.checkCompatible(party, results))
+                return party;
+        }
+        return null;
     }
-    return p;
-}
 
-function show() {
-    var table = document.getElementById("table");
-    while (table.firstChild)
-        table.removeChild(table.firstChild);
-    appendResults(table);
-    appendNext(table);
+    checkCompatible(party, results) {
+        for (let i = 0; i < results.length; i++) {
+            const r = results[i];
+            const ch = this.countCriticalHit(party, r.party);
+            if (ch != r.ch || ch == this.numParty) return false;
 
-    document.getElementById("chit").focus();
-}
+            const h = this.countHit(party, r.party) - ch;
+            if (h != r.h) return false;
+        }
+        return true;
+    }
 
-function appendTag(parent, name, text) {
-    var tag = document.createElement(name);
-    tag.innerHTML = text;
-    parent.appendChild(tag);
-}
+    countCriticalHit(a, b) {
+        let count = 0;
+        for (let i = 0; i < this.numParty; i++) {
+            if (a[i] == b[i])
+                count++;
+        }
+        return count;
+    }
 
-function appendResults(table) {
-    for (var i = 0; i < results.length; i++) {
-        var r = results[i];
-        var tr = document.createElement("tr");
-        appendTag(tr, "td", i + 1);
-        appendTag(tr, "td", partyToString(r.party));
-        appendTag(tr, "td", r.ch);
-        appendTag(tr, "td", r.h);
+    countHit(a, b) {
+        let count = 0;
+        const hit = new Array(this.numParty);
+        for (let i = 0; i < this.numParty; i++) {
+            for (let j = 0; j < this.numParty; j++) {
+                if (!hit[j] && a[i] == b[j]) {
+                    count++;
+                    hit[j] = true;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    makeRandomParty() {
+        const all = Math.pow(this.numJobs, this.numParty);
+        const number = Math.floor(Math.random() * all);
+        return this.makePartyFromSerial(number);
+    }
+
+    makePartyFromSerial(number) {
+        const p = new Array(this.numParty);
+        for (let i = 0; i < this.numParty; i++) {
+            p[i] = number % this.numJobs;
+            number = Math.floor(number / this.numJobs);
+        }
+        return p;
+    }
+
+    show() {
+        const table = document.getElementById(this.idTable);
+        while (table.firstChild)
+            table.removeChild(table.firstChild);
+        this.appendResults(table);
+        this.appendNext(table);
+
+        document.getElementById(this.idCHit).focus();
+    }
+
+    appendTag(parent, name, text) {
+        const tag = document.createElement(name);
+        tag.innerHTML = text;
+        parent.appendChild(tag);
+    }
+
+    appendResults(table) {
+        for (let i = 0; i < this.results.length; i++) {
+            const r = this.results[i];
+            const tr = document.createElement("tr");
+            this.appendTag(tr, "td", i + 1);
+            this.appendTag(tr, "td", this.partyToString(r.party));
+            this.appendTag(tr, "td", r.ch);
+            this.appendTag(tr, "td", r.h);
+            table.appendChild(tr);
+        }
+    }
+
+    appendNext(table) {
+        const tr = document.createElement("tr");
+        this.appendTag(tr, "td", "-");
+        this.appendTag(tr, "td", this.partyToString(this.nextParty));
+        this.appendTag(tr, "td", '<input id="chit" type="number" min="0" max="5" size="3"/>');
+        this.appendTag(tr, "td", '<input id="hit" type="number" min="0" max="5" size="3"/>');
         table.appendChild(tr);
     }
-}
 
-function appendNext(table) {
-    var tr = document.createElement("tr");
-    appendTag(tr, "td", "-");
-    appendTag(tr, "td", partyToString(nextParty));
-    appendTag(tr, "td", '<input id="chit" type="number" min="0" max="5" size="3"/>');
-    appendTag(tr, "td", '<input id="hit" type="number" min="0" max="5" size="3"/>');
-    appendTag(tr, "td", '<button onclick="onAddResult()">OK</button>');
-    appendTag(tr, "td", '<button onclick="onDeleteResult()">削除</button>');
-    table.appendChild(tr);
-}
-
-function partyToString(party) {
-    var s = "";
-    for (var i = 0; i < party.length; i++)
-        s += jobs[party[i]];
-    return s;
+    partyToString(party) {
+        let s = "";
+        for (var i = 0; i < party.length; i++)
+            s += this.jobs[party[i]];
+        return s;
+    }
 }
