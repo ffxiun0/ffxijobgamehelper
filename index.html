@@ -16,7 +16,7 @@
     <script src="../common/ga.js"></script>
     <script src="ffxijobgamehelper.js"></script>
     <script>
-        const jh = new FFXIJobGameHelper("mode", "table");
+        const jh = new FFXIJobGameHelper("mode", "results", "next", "chit", "hit");
         window.onload = (event) => jh.onSwitchNormalMode();
     </script>
 </head>
@@ -26,13 +26,29 @@
     <button onclick="jh.onSwitchNormalMode()">通常モード</button>
     <button onclick="jh.onSwitchHardMode()">ハードモード</button>
     <button onclick="jh.onReset()">リセット</button>
+    <noscript><h3>JavaScript を有効にして下さい</h3></noscript>
     <table>
         <tr>
             <td>
                 <table border="1" cellspacing="1" cellpadding="1" class="border">
                     <caption id="mode"></caption>
-                    <tr><th>回数</th><th>候補</th><th>CH</th><th>H</th></tr>
-                    <tbody id="table"><tr><td colspan="4">Java Script を有効にして下さい</td></tr></tbody>
+                    <thead>
+                        <tr>
+                            <th>回数</th>
+                            <th>候補</th>
+                            <th>CH</th>
+                            <th>H</th>
+                        </tr>
+                    </thead>
+                    <tbody id="results"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td>-</td>
+                            <td id="next"></td>
+                            <td><input id="chit" type="number" min="0" max="5" size="3" /></td>
+                            <td><input id="hit" type="number" min="0" max="5" size="3" /></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </td>
             <td style="vertical-align: bottom">

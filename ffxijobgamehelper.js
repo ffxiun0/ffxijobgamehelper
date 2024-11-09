@@ -31,11 +31,12 @@ class FFXIJobGameHelper {
         }
     }
 
-    constructor(idMode, idTable) {
+    constructor(idMode, idResults, idNext, idCHit, idHit) {
         this.idMode = idMode;
-        this.idTable = idTable;
-        this.idCHit = "chit";
-        this.idHit = "hit";
+        this.idResults = idResults;
+        this.idNext = idNext;
+        this.idCHit = idCHit
+        this.idHit = idHit;
 
         this.numParty = 5;
         this.jobs = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
@@ -151,13 +152,20 @@ class FFXIJobGameHelper {
     }
 
     show() {
-        const table = document.getElementById(this.idTable);
+        const table = document.getElementById(this.idResults);
         while (table.firstChild)
             table.removeChild(table.firstChild);
         this.appendResults(table);
-        this.appendNext(table);
 
-        document.getElementById(this.idCHit).focus();
+        const next = document.getElementById(this.idNext);
+        next.innerHTML = this.partyToString(this.nextParty);
+
+        const chit = document.getElementById(this.idCHit);
+        chit.value = "";
+        chit.focus();
+
+        const hit = document.getElementById(this.idHit);
+        hit.value = "";
     }
 
     appendTag(parent, name, text) {
@@ -176,15 +184,6 @@ class FFXIJobGameHelper {
             this.appendTag(tr, "td", r.h);
             table.appendChild(tr);
         }
-    }
-
-    appendNext(table) {
-        const tr = document.createElement("tr");
-        this.appendTag(tr, "td", "-");
-        this.appendTag(tr, "td", this.partyToString(this.nextParty));
-        this.appendTag(tr, "td", '<input id="chit" type="number" min="0" max="5" size="3"/>');
-        this.appendTag(tr, "td", '<input id="hit" type="number" min="0" max="5" size="3"/>');
-        table.appendChild(tr);
     }
 
     partyToString(party) {
