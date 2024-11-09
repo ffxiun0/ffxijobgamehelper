@@ -46,13 +46,13 @@ class FFXIJobGameHelper {
     }
 
     onSwitchNormalMode() {
-        document.getElementById(this.idMode).innerHTML = "通常モード";
+        document.getElementById(this.idMode).innerText = "通常モード";
         this.numJobs = 6;
         this.onReset();
     }
 
     onSwitchHardMode() {
-        document.getElementById(this.idMode).innerHTML = "ハードモード";
+        document.getElementById(this.idMode).innerText = "ハードモード";
         this.numJobs = 9;
         this.onReset();
     }
@@ -156,7 +156,7 @@ class FFXIJobGameHelper {
         this.setResults(table);
 
         const next = document.getElementById(this.idNext);
-        next.innerHTML = this.partyToString(this.nextParty);
+        next.innerText = this.partyToString(this.nextParty);
 
         const chit = document.getElementById(this.idCHit);
         chit.value = "";
@@ -168,7 +168,7 @@ class FFXIJobGameHelper {
 
     appendTag(parent, name, text) {
         const tag = document.createElement(name);
-        tag.innerHTML = text;
+        tag.innerText = text;
         parent.appendChild(tag);
     }
 
