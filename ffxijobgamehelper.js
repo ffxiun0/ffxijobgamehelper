@@ -153,9 +153,7 @@ class FFXIJobGameHelper {
 
     show() {
         const table = document.getElementById(this.idResults);
-        while (table.firstChild)
-            table.removeChild(table.firstChild);
-        this.appendResults(table);
+        this.setResults(table);
 
         const next = document.getElementById(this.idNext);
         next.innerHTML = this.partyToString(this.nextParty);
@@ -174,15 +172,22 @@ class FFXIJobGameHelper {
         parent.appendChild(tag);
     }
 
-    appendResults(table) {
-        for (let i = 0; i < this.results.length; i++) {
-            const r = this.results[i];
-            const tr = document.createElement("tr");
-            this.appendTag(tr, "td", i + 1);
-            this.appendTag(tr, "td", this.partyToString(r.party));
-            this.appendTag(tr, "td", r.ch);
-            this.appendTag(tr, "td", r.h);
-            table.appendChild(tr);
+    setResults(table) {
+        while (table.firstChild)
+            table.removeChild(table.firstChild);
+
+        if (this.results.length > 0) {
+            for (let i = 0; i < this.results.length; i++) {
+                const r = this.results[i];
+                const tr = document.createElement("tr");
+                this.appendTag(tr, "td", i + 1);
+                this.appendTag(tr, "td", this.partyToString(r.party));
+                this.appendTag(tr, "td", r.ch);
+                this.appendTag(tr, "td", r.h);
+                table.appendChild(tr);
+            }
+        } else {
+            table.appendChild(document.createElement("tr")); // Firefox style rendering bug
         }
     }
 
