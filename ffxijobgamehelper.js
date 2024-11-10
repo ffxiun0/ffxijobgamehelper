@@ -95,16 +95,16 @@ class FFXIJobGameHelper {
     checkCompatible(party, results) {
         for (let i = 0; i < results.length; i++) {
             const r = results[i];
-            const ch = this.countCriticalHit(party, r.party);
+            const ch = this.countCriticalHits(party, r.party);
             if (ch != r.ch || ch == this.numParty) return false;
 
-            const h = this.countHit(party, r.party) - ch;
+            const h = this.countAllHits(party, r.party) - ch;
             if (h != r.h) return false;
         }
         return true;
     }
 
-    countCriticalHit(a, b) {
+    countCriticalHits(a, b) {
         let count = 0;
         for (let i = 0; i < this.numParty; i++) {
             if (a[i] == b[i])
@@ -113,7 +113,7 @@ class FFXIJobGameHelper {
         return count;
     }
 
-    countHit(a, b) {
+    countAllHits(a, b) {
         let count = 0;
         const hit = new Array(this.numParty);
         for (let i = 0; i < this.numParty; i++) {
