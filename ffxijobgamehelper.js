@@ -207,7 +207,7 @@ class FFXIJobGameHelper {
 
         partyToString(party) {
             let s = "";
-            for (var i = 0; i < party.length; i++)
+            for (let i = 0; i < party.length; i++)
                 s += this.jobNames[party[i]];
             return s;
         }
