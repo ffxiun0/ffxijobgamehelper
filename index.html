@@ -17,15 +17,15 @@
     <script src="ffxijobgamehelper.js"></script>
     <script>
         const jh = new FFXIJobGameHelper("mode", "results", "next", "chit", "hit");
-        window.onload = (event) => jh.onSwitchNormalMode();
+        window.onload = (event) => jh.setDifficultyNormal();
     </script>
 </head>
 <body>
     <a href="..">ffxiun0</a>
     <h2>FF11 ジョブ当て屋 予測ツール</h2>
-    <button onclick="jh.onSwitchNormalMode()">通常モード</button>
-    <button onclick="jh.onSwitchHardMode()">ハードモード</button>
-    <button onclick="jh.onReset()">リセット</button>
+    <button onclick="jh.setDifficultyNormal()">通常モード</button>
+    <button onclick="jh.setDifficultyHard()">ハードモード</button>
+    <button onclick="jh.reset()">リセット</button>
     <noscript><h3>JavaScript を有効にして下さい</h3></noscript>
     <table>
         <tr>
@@ -52,8 +52,8 @@
                 </table>
             </td>
             <td style="vertical-align: bottom">
-                <button onclick="jh.onAddResult()">OK</button>
-                <button onclick="jh.onDeleteResult()">削除</button>
+                <button onclick="jh.addResult()">OK</button>
+                <button onclick="jh.deleteResult()">削除</button>
             </td>
         </tr>
     </table>

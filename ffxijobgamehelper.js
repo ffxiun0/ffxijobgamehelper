@@ -23,15 +23,8 @@ THE SOFTWARE.
 */
 
 class FFXIJobGameHelper {
-    HitResult = class {
-        constructor(party, ch, h) {
-            this.party = party;
-            this.ch = ch;
-            this.h = h;
-        }
-    }
-
     constructor(idMode, idResults, idNext, idCHit, idHit) {
+        this.renderer = new this.Renderer;
         this.idMode = idMode;
         this.idResults = idResults;
         this.idNext = idNext;
@@ -39,31 +32,30 @@ class FFXIJobGameHelper {
         this.idHit = idHit;
 
         this.numParty = 5;
-        this.jobs = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
         this.numJobs = 6;
         this.results = new Array();
         this.nextParty = this.makeRandomParty();
     }
 
-    onSwitchNormalMode() {
-        document.getElementById(this.idMode).innerText = "通常モード";
+    setDifficultyNormal() {
+        this.renderer.setText(this.idMode, "通常モード");
         this.numJobs = 6;
-        this.onReset();
+        this.reset();
     }
 
-    onSwitchHardMode() {
-        document.getElementById(this.idMode).innerText = "ハードモード";
+    setDifficultyHard() {
+        this.renderer.setText(this.idMode, "ハードモード");
         this.numJobs = 9;
-        this.onReset();
+        this.reset();
     }
 
-    onReset() {
+    reset() {
         this.nextParty = this.makeRandomParty();
         this.results = new Array();
         this.show();
     }
 
-    onDeleteResult() {
+    deleteResult() {
         if (this.results.length <= 0) return;
 
         const r = this.results.pop();
@@ -71,9 +63,9 @@ class FFXIJobGameHelper {
         this.show();
     }
 
-    onAddResult() {
-        const ch = parseInt(document.getElementById(this.idCHit).value);
-        const h = parseInt(document.getElementById(this.idHit).value);
+    addResult() {
+        const ch = this.renderer.getInputValueInt(this.idCHit);
+        const h = this.renderer.getInputValueInt(this.idHit);
         if (Number.isNaN(ch)) return;
         if (Number.isNaN(h)) return;
 
@@ -152,49 +144,74 @@ class FFXIJobGameHelper {
     }
 
     show() {
-        const table = document.getElementById(this.idResults);
-        this.setResults(table);
-
-        const next = document.getElementById(this.idNext);
-        next.innerText = this.partyToString(this.nextParty);
-
-        const chit = document.getElementById(this.idCHit);
-        chit.value = "";
-        chit.focus();
-
-        const hit = document.getElementById(this.idHit);
-        hit.value = "";
+        this.renderer.setResults(this.idResults, this.results);
+        this.renderer.setNextParty(this.idNext, this.nextParty);
+        this.renderer.resetInput(this.idCHit, true);
+        this.renderer.resetInput(this.idHit);
     }
 
-    appendTag(parent, name, text) {
-        const tag = document.createElement(name);
-        tag.innerText = text;
-        parent.appendChild(tag);
-    }
-
-    setResults(table) {
-        while (table.firstChild)
-            table.removeChild(table.firstChild);
-
-        if (this.results.length > 0) {
-            for (let i = 0; i < this.results.length; i++) {
-                const r = this.results[i];
-                const tr = document.createElement("tr");
-                this.appendTag(tr, "td", i + 1);
-                this.appendTag(tr, "td", this.partyToString(r.party));
-                this.appendTag(tr, "td", r.ch);
-                this.appendTag(tr, "td", r.h);
-                table.appendChild(tr);
-            }
-        } else {
-            table.appendChild(document.createElement("tr")); // Firefox style rendering bug
+    HitResult = class {
+        constructor(party, ch, h) {
+            this.party = party;
+            this.ch = ch;
+            this.h = h;
         }
     }
 
-    partyToString(party) {
-        let s = "";
-        for (var i = 0; i < party.length; i++)
-            s += this.jobs[party[i]];
-        return s;
+    Renderer = class {
+        setText(id, text) {
+            document.getElementById(id).innerText = text;
+        }
+
+        getInputValueInt(id) {
+            return parseInt(document.getElementById(id).value);
+        }
+
+        resetInput(id, isFocused = false) {
+            const input = document.getElementById(id);
+            input.value = "";
+            if (isFocused)
+                input.focus();
+        }
+
+        setResults(id, results) {
+            const tbody = document.getElementById(id);
+
+            while (tbody.firstChild)
+                tbody.removeChild(tbody.firstChild);
+
+            if (results.length > 0) {
+                for (let i = 0; i < results.length; i++) {
+                    const r = results[i];
+                    const tr = document.createElement("tr");
+                    this.appendElement(tr, "td", i + 1);
+                    this.appendElement(tr, "td", this.partyToString(r.party));
+                    this.appendElement(tr, "td", r.ch);
+                    this.appendElement(tr, "td", r.h);
+                    tbody.appendChild(tr);
+                }
+            } else {
+                tbody.appendChild(document.createElement("tr")); // Firefox style rendering bug
+            }
+        }
+
+        setNextParty(id, party) {
+            this.setText(id, this.partyToString(party));
+        }
+
+        appendElement(parent, name, text) {
+            const elem = document.createElement(name);
+            elem.innerText = text;
+            parent.appendChild(elem);
+        }
+
+        partyToString(party) {
+            let s = "";
+            for (var i = 0; i < party.length; i++)
+                s += this.jobNames[party[i]];
+            return s;
+        }
+
+        jobNames = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
     }
 }
