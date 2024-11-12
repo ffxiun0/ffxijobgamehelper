@@ -34,7 +34,7 @@ class FFXIJobGameHelper {
         this.numParty = 5;
         this.numJobs = 6;
         this.results = new Array();
-        this.nextParty = this.makeRandomParty();
+        this.nextParty = this.makePartyRandom();
     }
 
     setDifficultyNormal() {
@@ -50,7 +50,7 @@ class FFXIJobGameHelper {
     }
 
     reset() {
-        this.nextParty = this.makeRandomParty();
+        this.nextParty = this.makePartyRandom();
         this.results = new Array();
         this.show();
     }
@@ -81,7 +81,25 @@ class FFXIJobGameHelper {
     }
 
     searchNextParty(results) {
-        const all = Math.pow(this.numJobs, this.numParty);
+        const next = this.searchNextPartyRandom(results);
+        if (next)
+            return next;
+        else
+            return this.searchNextPartyIncremental(results);
+    }
+
+    searchNextPartyRandom(results) {
+        const all = this.getPartyCombinationCount();
+        for (let i = 0; i < all; i++) {
+            const party = this.makePartyRandom();
+            if (this.checkCompatible(party, results))
+                return party;
+        }
+        return null;
+    }
+
+    searchNextPartyIncremental(results) {
+        const all = this.getPartyCombinationCount();
         const offset = Math.floor(Math.random() * all);
         for (let i = 0; i < all; i++) {
             const number = (offset + i) % all;
@@ -128,8 +146,8 @@ class FFXIJobGameHelper {
         return count;
     }
 
-    makeRandomParty() {
-        const all = Math.pow(this.numJobs, this.numParty);
+    makePartyRandom() {
+        const all = this.getPartyCombinationCount();
         const number = Math.floor(Math.random() * all);
         return this.makePartyFromSerial(number);
     }
@@ -141,6 +159,10 @@ class FFXIJobGameHelper {
             number = Math.floor(number / this.numJobs);
         }
         return p;
+    }
+
+    getPartyCombinationCount() {
+        return Math.pow(this.numJobs, this.numParty);
     }
 
     show() {
