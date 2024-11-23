@@ -228,10 +228,7 @@ class FFXIJobGameHelper {
         }
 
         partyToString(party) {
-            let s = "";
-            for (let i = 0; i < party.length; i++)
-                s += this.jobNames[party[i]];
-            return s;
+            return party.map((n) => this.jobNames[n]).join("");
         }
 
         jobNames = ["戦", "モ", "白", "黒", "赤", "シ", "ナ", "暗", "獣"];
